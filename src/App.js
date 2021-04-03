@@ -25,7 +25,7 @@ function App() {
         />
       </div>
       <div>
-        <Card style={{ width: '18rem', backgroundColor: "black", color: "white" }}>
+        <Card style={{ width: '18rem', backgroundColor: "#121212", color: "white" }}>
           <Card.Img variant="top" src="https://content.fortune.com/wp-content/uploads/2019/12/GettyImages-1192917838-e1576245538349.jpg" />
           <Card.Body>
             <Card.Title>MKBHD</Card.Title>
