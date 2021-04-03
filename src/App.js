@@ -14,11 +14,13 @@ function App() {
       <div style={{ width: "10vw", marginLeft: "25vw", marginTop: "3vh", float: "left" }}>
         <Select
           options={options}
+          placeholder="Categories"
         />
       </div>
       <div style={{ width: "10vw", marginLeft: "5vw", marginTop: "3vh", float: "left" }}>
         <Select
           options={options}
+          placeholder="Location"
         />
       </div>
     </div>
