@@ -1,5 +1,6 @@
 import React from 'react';
 import Select from 'react-select';
+import { Card } from 'react-bootstrap';
 import './App.css'
 function App() {
   const options = [
@@ -22,6 +23,17 @@ function App() {
           options={options}
           placeholder="Location"
         />
+      </div>
+      <div>
+        <Card style={{ width: '18rem', backgroundColor: "black", color: "white" }}>
+          <Card.Img variant="top" src="https://content.fortune.com/wp-content/uploads/2019/12/GettyImages-1192917838-e1576245538349.jpg" />
+          <Card.Body>
+            <Card.Title>MKBHD</Card.Title>
+            <Card.Text>
+              Matte Black Everything
+          </Card.Text>
+          </Card.Body>
+        </Card>
       </div>
     </div>
   );
