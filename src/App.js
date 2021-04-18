@@ -44,11 +44,15 @@ function App() {
             />
           </Col>
         </Row>
-        <div style={{ marginTop: "20px", color: "white" }}>
-          {console.log(data[0])}
-          You Searched for {data[0]?.title || ""} <br />
-          <pre style={{ color: "white" }}>{JSON.stringify(data, null, 2)}</pre>
-        </div>
+        {data.length > 0 ?
+          <div style={{ marginTop: "20px", color: "white" }}>
+            {console.log(data[0])}
+            <p style={{ fontWeight: "800" }}>You Searched for {title || ""} </p>
+            <pre style={{ color: "white" }}>{JSON.stringify(data, null, 2)}</pre>
+          </div>
+          :
+          ''
+        }
         {/* <div style={{ display: "block", marginTop: "5vh" }}>
           <Card style={{ backgroundColor: "#121212", color: "white" }}>
             <Card.Img variant="top" src="https://content.fortune.com/wp-content/uploads/2019/12/GettyImages-1192917838-e1576245538349.jpg" />
