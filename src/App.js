@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Select from 'react-select';
-import axios from 'axios';
-import { Card, Row, Col, Form } from 'react-bootstrap';
+import { Row, Col, Form } from 'react-bootstrap';
 import { getData } from './dataHelpers';
 import './App.css'
 function App() {
