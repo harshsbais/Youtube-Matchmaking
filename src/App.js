@@ -7,11 +7,15 @@ function App() {
   const [data, setData] = useState([]);
   const [title, setTitle] = useState('');
   const [err, setErr] = useState(false);
+  const [loading, setLoading] = useState(false);
   const onSubmit = async (e) => {
+    setData([])
+    setLoading(true);
     setErr(false);
     e.preventDefault();
     try {
       const res = await getData(title, 1, 1000);
+      setLoading(false);
       setData(res?.data?.body)
     }
     catch (err) {
@@ -50,6 +54,12 @@ function App() {
             <input placeholder="GMT +- {hh:mm}" />
           </Col>
         </Row>
+        {loading ?
+          <center>
+            <i class="fas fa-spinner fa-pulse fa-5x"></i>
+          </center>
+          : ''
+        }
         {data?.length > 0 ?
           data.map((d) => {
             return (
