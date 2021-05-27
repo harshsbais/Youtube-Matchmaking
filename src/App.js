@@ -20,11 +20,6 @@ function App() {
   const onChange = (e) => {
     setTitle(e.target.value);
   }
-  const options = [
-    { value: 'chocolate', label: 'Chocolate' },
-    { value: 'strawberry', label: 'Strawberry' },
-    { value: 'vanilla', label: 'Vanilla' },
-  ];
   return (
     <center>
       <div className="App" style={{ width: "50vw" }}>
@@ -35,18 +30,15 @@ function App() {
             <button type="submit" style={{ background: "none", border: "none", outline: "none", fontSize: "20px", color: "white" }}><i className="fa fa-search"></i></button>
           </Form>
         </center>
-        <Row style={{ marginTop: "3vh" }}>
+        <Row style={{ marginTop: "3vh", marginLeft: "1vw" }}>
+          <p>Subscriber Range:-</p>
+        </Row>
+        <Row style={{ marginTop: "1vh" }}>
           <Col md={3}>
-            <Select
-              options={options}
-              placeholder="Categories"
-            />
+            <input placeholder="Lower Limit" />
           </Col>
           <Col md={3}>
-            <Select
-              options={options}
-              placeholder="Location"
-            />
+            <input placeholder="Upper Limit" />
           </Col>
         </Row>
         {data.length > 0 ?
