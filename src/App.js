@@ -11,7 +11,7 @@ function App() {
     e.preventDefault();
     try {
       const res = await getData(title, 1, 1000);
-      setData(JSON.parse(res?.data?.body))
+      setData(res?.data?.body)
     }
     catch (err) {
       setErr(true);
