@@ -7,9 +7,10 @@ function App() {
   const [title, setTitle] = useState('');
   const [err, setErr] = useState(false);
   const onSubmit = async (e) => {
+    setErr(false);
     e.preventDefault();
-    const res = await getData(title);
     try {
+      const res = await getData(title, 1, 1000);
       setData(JSON.parse(res?.data?.body))
     }
     catch (err) {
