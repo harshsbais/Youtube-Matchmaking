@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Row, Col, Form } from 'react-bootstrap';
 import { getData } from './dataHelpers';
+import { Card } from 'react-bootstrap';
 import './App.css'
 function App() {
   const [data, setData] = useState([]);
@@ -49,11 +50,25 @@ function App() {
             <input placeholder="GMT +- {hh:mm}" />
           </Col>
         </Row>
-        {data.length > 0 ?
-          <div style={{ marginTop: "20px", color: "white" }}>
-            <p style={{ fontWeight: "800" }}>You Searched for {title || ""} </p>
-            <pre style={{ color: "white" }}>{JSON.stringify(data, null, 2)}</pre>
-          </div>
+        {data?.length > 0 ?
+          data.map((d) => {
+            return (
+              <div style={{ display: "block", marginTop: "5vh" }}>
+                <a href={`https://www.youtube.com/channel/${d?.id}`} rel="noreferrer noopener" target="_blank">
+                  <Card style={{ backgroundColor: "#121212", color: "white" }}>
+                    <Card.Img variant="top" src={d?.image} />
+                    <Card.Body>
+                      <Card.Title>{d?.title}</Card.Title>
+                      <Card.Text>
+                        Subscriber Count:- {d?.subscriberCount}<br />
+                        {d?.description}
+                      </Card.Text>
+                    </Card.Body>
+                  </Card>
+                </a>
+              </div>
+            )
+          })
           : ''
         }
         {err ?
@@ -62,17 +77,6 @@ function App() {
           </div>
           : ''
         }
-        {/* <div style={{ display: "block", marginTop: "5vh" }}>
-          <Card style={{ backgroundColor: "#121212", color: "white" }}>
-            <Card.Img variant="top" src="https://content.fortune.com/wp-content/uploads/2019/12/GettyImages-1192917838-e1576245538349.jpg" />
-            <Card.Body>
-              <Card.Title>MKBHD</Card.Title>
-              <Card.Text>
-                Matte Black Everything
-          </Card.Text>
-            </Card.Body>
-          </Card>
-        </div> */}
       </div>
     </center>
   );
