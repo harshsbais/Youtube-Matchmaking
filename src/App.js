@@ -94,7 +94,7 @@ function App() {
               <div style={{ display: "block", marginTop: "5vh" }}>
                 <a href={`https://www.youtube.com/channel/${d?.id}`} rel="noreferrer noopener" target="_blank">
                   <Card style={{ backgroundColor: "#121212", color: "white" }}>
-                    <Card.Img variant="top" src={d?.image} />
+                    <Card.Img variant="top" src={d?.image} loading="lazy" />
                     <Card.Body>
                       <Card.Title>{d?.title}</Card.Title>
                       <Card.Text>
