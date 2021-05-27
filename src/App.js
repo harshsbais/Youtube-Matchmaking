@@ -6,11 +6,16 @@ import './App.css'
 function App() {
   const [data, setData] = useState([]);
   const [title, setTitle] = useState('');
+  const [err, setErr] = useState(false);
   const onSubmit = async (e) => {
     e.preventDefault();
     const res = await getData(title);
-    setData(JSON.parse(res.data.body))
-    console.log(JSON.parse(res.data.body))
+    try {
+      setData(JSON.parse(res?.data?.body))
+    }
+    catch (err) {
+      setErr(true);
+    }
   }
   const onChange = (e) => {
     setTitle(e.target.value);
@@ -46,12 +51,16 @@ function App() {
         </Row>
         {data.length > 0 ?
           <div style={{ marginTop: "20px", color: "white" }}>
-            {console.log(data[0])}
             <p style={{ fontWeight: "800" }}>You Searched for {title || ""} </p>
             <pre style={{ color: "white" }}>{JSON.stringify(data, null, 2)}</pre>
           </div>
-          :
-          ''
+          : ''
+        }
+        {err ?
+          <div style={{ marginTop: "20px", color: "white" }}>
+            <p style={{ fontWeight: "800" }}>No Data</p>
+          </div>
+          : ''
         }
         {/* <div style={{ display: "block", marginTop: "5vh" }}>
           <Card style={{ backgroundColor: "#121212", color: "white" }}>
