@@ -6,6 +6,8 @@ import './App.css'
 function App() {
   const [data, setData] = useState([]);
   const [title, setTitle] = useState('');
+  const [lowerLimit, setLowerLimit] = useState(1);
+  const [upperLimit, setUpperLimit] = useState(1000000);
   const [err, setErr] = useState(false);
   const [loading, setLoading] = useState(false);
   const onSubmit = async (e) => {
@@ -14,13 +16,19 @@ function App() {
     setErr(false);
     e.preventDefault();
     try {
-      const res = await getData(title, 1, 1000);
+      const res = await getData(title, lowerLimit, upperLimit);
       setLoading(false);
       setData(res?.data?.body)
     }
     catch (err) {
       setErr(true);
     }
+  }
+  const handleChange = (e) => {
+    if (e.target.name === "lower")
+      setLowerLimit(e.target.value)
+    else
+      setUpperLimit(e.target.value)
   }
   const onChange = (e) => {
     setTitle(e.target.value);
@@ -40,10 +48,10 @@ function App() {
         </Row>
         <Row style={{ marginTop: "1vh" }}>
           <Col md={3}>
-            <input placeholder="Lower Limit" />
+            <input placeholder="Lower Limit" name="lower" onChange={(e) => handleChange(e)} value={lowerLimit} />
           </Col>
           <Col md={3}>
-            <input placeholder="Upper Limit" />
+            <input placeholder="Upper Limit" name="upper" onChange={(e) => handleChange(e)} value={upperLimit} />
           </Col>
         </Row>
         <Row style={{ marginTop: "3vh", marginLeft: "1vw" }}>
