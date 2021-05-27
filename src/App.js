@@ -18,7 +18,9 @@ function App() {
     setErr(false);
     e.preventDefault();
     try {
-      const res = await getData(title, lowerLimit, upperLimit, timezone, timezoneRange);
+      let res = await getData(title, lowerLimit, upperLimit, timezone, timezoneRange, true);
+      if (res.data.errorType)
+        res = await getData(title, lowerLimit, upperLimit, timezone, timezoneRange, false);
       setLoading(false);
       setData(res?.data?.body)
     }
