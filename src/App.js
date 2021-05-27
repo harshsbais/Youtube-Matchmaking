@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Select from 'react-select';
 import { Row, Col, Form } from 'react-bootstrap';
 import { getData } from './dataHelpers';
 import './App.css'
@@ -31,7 +30,7 @@ function App() {
           </Form>
         </center>
         <Row style={{ marginTop: "3vh", marginLeft: "1vw" }}>
-          <p>Subscriber Range:-</p>
+          <b>Subscriber Range:-</b>
         </Row>
         <Row style={{ marginTop: "1vh" }}>
           <Col md={3}>
@@ -39,6 +38,14 @@ function App() {
           </Col>
           <Col md={3}>
             <input placeholder="Upper Limit" />
+          </Col>
+        </Row>
+        <Row style={{ marginTop: "3vh", marginLeft: "1vw" }}>
+          <b>TimeZone:-</b>
+        </Row>
+        <Row style={{ marginTop: "1vh" }}>
+          <Col md={3}>
+            <input placeholder="GMT +- {hh:mm}" />
           </Col>
         </Row>
         {data.length > 0 ?
