@@ -8,6 +8,8 @@ function App() {
   const [title, setTitle] = useState('');
   const [lowerLimit, setLowerLimit] = useState(1);
   const [upperLimit, setUpperLimit] = useState(1000000);
+  const [timezone, setTimezone] = useState(0);
+  const [timezoneRange, setTimezoneRange] = useState(0);
   const [err, setErr] = useState(false);
   const [loading, setLoading] = useState(false);
   const onSubmit = async (e) => {
@@ -16,7 +18,7 @@ function App() {
     setErr(false);
     e.preventDefault();
     try {
-      const res = await getData(title, lowerLimit, upperLimit);
+      const res = await getData(title, lowerLimit, upperLimit, timezone, timezoneRange);
       setLoading(false);
       setData(res?.data?.body)
     }
@@ -27,8 +29,12 @@ function App() {
   const handleChange = (e) => {
     if (e.target.name === "lower")
       setLowerLimit(e.target.value)
-    else
+    else if (e.target.name === "upper")
       setUpperLimit(e.target.value)
+    else if (e.target.name === "timezone")
+      setTimezone(e.target.value)
+    else
+      setTimezoneRange(e.target.value)
   }
   const onChange = (e) => {
     setTitle(e.target.value);
@@ -59,7 +65,21 @@ function App() {
         </Row>
         <Row style={{ marginTop: "1vh" }}>
           <Col md={3}>
-            <input placeholder="GMT +- {hh:mm}" />
+            <input placeholder="UTC +- {hh}" value={timezone} name="timezone" onChange={(e) => handleChange(e)} />
+          </Col>
+          <Col md={6}>
+            <p>Enter 5 for +5 UTC or -10 for -10 UTC</p>
+          </Col>
+        </Row>
+        <Row style={{ marginTop: "3vh", marginLeft: "1vw" }}>
+          <b>TimeZone Range:-</b>
+        </Row>
+        <Row style={{ marginTop: "1vh" }}>
+          <Col md={3}>
+            <input placeholder="hh" value={timezoneRange} name="timezone-range" onChange={(e) => handleChange(e)} />
+          </Col>
+          <Col md={6}>
+            <p>Enter 2 for +- 2 hours their local time</p>
           </Col>
         </Row>
         {loading ?
