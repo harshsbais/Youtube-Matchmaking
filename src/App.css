@@ -7,3 +7,11 @@ body {
     background-attachment: fixed;
     color: white !important;
 }
+
+.card {
+    flex-direction: row !important;
+}
+
+.card img {
+    width: 30%;
+}
