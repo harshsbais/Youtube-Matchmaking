@@ -47,7 +47,7 @@ function App() {
   return (
     <center>
       <div className="App" style={{ width: "50vw" }}>
-        <center><h1 style={{ marginTop: "10vh", color: "white" }}>Youtube Matchmaking</h1></center>
+        <center><h1 style={{ paddingTop: "10vh", color: "white" }}>Youtube Matchmaking</h1></center>
         <center>
           <Form onSubmit={onSubmit}>
             <input onChange={onChange} type="text" className="mx-auto" placeholder="   &#xF002;   Search" style={{ width: '95%', height: '5vh', fontFamily: 'Arial, FontAwesome', outline: 'none', padding: '10px', marginTop: "10vh" }} />
