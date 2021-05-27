@@ -19,8 +19,11 @@ function App() {
     e.preventDefault();
     try {
       let res = await getData(title, lowerLimit, upperLimit, timezone, timezoneRange, true);
-      if (res.data.errorType)
+      if (res.data.errorType) {
         res = await getData(title, lowerLimit, upperLimit, timezone, timezoneRange, false);
+        if (res.data.errorType)
+          setErr(true);
+      }
       setLoading(false);
       setData(res?.data?.body)
     }
@@ -113,7 +116,10 @@ function App() {
         }
         {err ?
           <div style={{ marginTop: "20px", color: "white" }}>
-            <p style={{ fontWeight: "800" }}>No Data</p>
+            <h4>Whoops 🙁</h4>
+            <p>
+              We don't have any data on this keyword.
+            </p>
           </div>
           : ''
         }
