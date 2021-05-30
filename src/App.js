@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Row, Col, Form } from 'react-bootstrap';
 import { getData } from './dataHelpers';
 import { Card } from 'react-bootstrap';
+import Signup from './Signup';
+import Login from './Login';
 import './App.css'
 function App() {
   const [data, setData] = useState([]);
@@ -12,6 +14,8 @@ function App() {
   const [timezoneRange, setTimezoneRange] = useState('');
   const [err, setErr] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showSignupModal, setShowSignupModal] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const onSubmit = async (e) => {
     setData([])
     setLoading(true);
@@ -55,9 +59,11 @@ function App() {
   }
   return (
     <center>
+      <Signup showSignupModal={showSignupModal} setShowSignupModal={setShowSignupModal} />
+      <Login setShowLoginModal={setShowLoginModal} showLoginModal={showLoginModal} />
       <div style={{ float: "right", margin: "80px" }}>
-        <button style={{ margin: "10px", padding: "3px 10px", background: "#0d324d", color: "white", border: "1px solid white", borderRadius: "5px" }}>Login</button>
-        <button style={{ margin: "10px", padding: "3px 10px", background: "#0d324d", color: "white", border: "1px solid white", borderRadius: "5px" }}>Signup</button>
+        <button onClick={(e) => { setShowLoginModal(true) }} style={{ margin: "10px", padding: "3px 10px", background: "#0d324d", color: "white", border: "1px solid white", borderRadius: "5px" }}>Login</button>
+        <button onClick={(e) => { setShowSignupModal(true) }} style={{ margin: "10px", padding: "3px 10px", background: "#0d324d", color: "white", border: "1px solid white", borderRadius: "5px" }}>Signup</button>
       </div>
       <div className="App" style={{ width: "50vw" }}>
         <center>
