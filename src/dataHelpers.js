@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { _getTitleInfo, _signup } from './Endpoint';
+import { _getTitleInfo, _signup, _collab } from './Endpoint';
 export const getData = async (title, lowerCountSubs, higherCountSubs, timezone, timezoneRange, val) => {
     let response;
     if (val) {
@@ -18,7 +18,7 @@ export const signUp = async (email, password, user, id) => {
     return response;
 }
 
-export const collab = async (user, collab) => {
-    let response = await axios.get(_signup, { params: { user, collab } });
+export const collabUser = async (user, collab) => {
+    let response = await axios.get(_collab, { params: { user, collab: 'True' } });
     return response;
 }
