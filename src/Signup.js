@@ -21,6 +21,9 @@ function SignUp({ showSignupModal, setShowSignupModal, setShowToast }) {
             setUserData({});
             setShowToast(true);
         }
+        else {
+            setShowToast(true);
+        }
     }
     return (
         <Modal
