@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, Form } from 'react-bootstrap';
 import { signUp, collabUser } from './dataHelpers';
-function SignUp({ showSignupModal, setShowSignupModal }) {
+function SignUp({ showSignupModal, setShowSignupModal, setShowToast }) {
     const [userData, setUserData] = useState({
         collab: false
     });
@@ -19,6 +19,7 @@ function SignUp({ showSignupModal, setShowSignupModal }) {
             console.log(res2);
             setShowSignupModal(false);
             setUserData({});
+            setShowToast(true);
         }
     }
     return (

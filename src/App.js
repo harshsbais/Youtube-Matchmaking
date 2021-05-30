@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Row, Col, Form } from 'react-bootstrap';
+import { Row, Col, Form, Toast } from 'react-bootstrap';
 import { getData } from './dataHelpers';
 import { Card } from 'react-bootstrap';
 import Signup from './Signup';
@@ -16,6 +16,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showToast, setShowToast] = useState(false);
   const onSubmit = async (e) => {
     setData([])
     setLoading(true);
@@ -59,8 +60,13 @@ function App() {
   }
   return (
     <center>
-      <Signup showSignupModal={showSignupModal} setShowSignupModal={setShowSignupModal} />
+      <Signup showSignupModal={showSignupModal} setShowSignupModal={setShowSignupModal} setShowToast={setShowToast} />
       <Login setShowLoginModal={setShowLoginModal} showLoginModal={showLoginModal} />
+      <Toast style={{
+        float: 'right', position: 'fixed', backgroundColor: '#52af50', color: 'white', zIndex: '10000'
+      }} onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide>
+        <Toast.Body>User Created</Toast.Body>
+      </Toast>
       <div style={{ float: "right", margin: "80px" }}>
         <button onClick={(e) => { setShowLoginModal(true) }} style={{ margin: "10px", padding: "3px 10px", background: "#0d324d", color: "white", border: "1px solid white", borderRadius: "5px" }}>Login</button>
         <button onClick={(e) => { setShowSignupModal(true) }} style={{ margin: "10px", padding: "3px 10px", background: "#0d324d", color: "white", border: "1px solid white", borderRadius: "5px" }}>Signup</button>
@@ -134,17 +140,18 @@ function App() {
           })
           : ''
         }
-        {err ?
-          <div style={{ marginTop: "20px", color: "white" }}>
-            <h4>Whoops 🙁</h4>
-            <p>
-              We don't have any data on this keyword.
+        {
+          err ?
+            <div style={{ marginTop: "20px", color: "white" }}>
+              <h4>Whoops 🙁</h4>
+              <p>
+                We don't have any data on this keyword.
             </p>
-          </div>
-          : ''
+            </div>
+            : ''
         }
-      </div>
-    </center>
+      </div >
+    </center >
   );
 }
 
