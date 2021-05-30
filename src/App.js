@@ -24,8 +24,17 @@ function App() {
         if (res.data.errorType)
           setErr(true);
       }
+      console.log(res.data.body)
       setLoading(false);
-      setData(res?.data?.body)
+      let arr = [];
+      for (let i = 0; i < res?.data?.body?.length; i++) {
+        if (res?.data?.body[i]?.collab) {
+          arr.unshift(res?.data?.body[i]);
+        }
+        else
+          arr.push(res?.data?.body[i]);
+      }
+      setData(arr);
     }
     catch (err) {
       setErr(true);
