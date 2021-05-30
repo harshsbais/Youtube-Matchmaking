@@ -6,10 +6,10 @@ import './App.css'
 function App() {
   const [data, setData] = useState([]);
   const [title, setTitle] = useState('');
-  const [lowerLimit, setLowerLimit] = useState(1);
-  const [upperLimit, setUpperLimit] = useState(1000000);
-  const [timezone, setTimezone] = useState(0);
-  const [timezoneRange, setTimezoneRange] = useState(0);
+  const [lowerLimit, setLowerLimit] = useState('');
+  const [upperLimit, setUpperLimit] = useState('');
+  const [timezone, setTimezone] = useState('');
+  const [timezoneRange, setTimezoneRange] = useState('');
   const [err, setErr] = useState(false);
   const [loading, setLoading] = useState(false);
   const onSubmit = async (e) => {

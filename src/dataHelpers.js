@@ -4,12 +4,14 @@ export const getData = async (title, lowerCountSubs, higherCountSubs, timezone, 
     let response;
     if (val) {
         title = title.charAt(0).toUpperCase() + title.slice(1);
-        response = await axios.get(_getTitleInfo, { params: { title, page: 1, subscriber_range: `${lowerCountSubs}-${higherCountSubs}`, timezone, timezone_range: timezoneRange } });
-
+        if (lowerCountSubs === '' && higherCountSubs === '')
+            response = await axios.get(_getTitleInfo, { params: { title, page: 1, timezone: timezone === '' ? 0 : timezone, timezone_range: timezoneRange === '' ? 12 : timezoneRange } });
+        else
+            response = await axios.get(_getTitleInfo, { params: { title, page: 1, subscriber_range: `${lowerCountSubs === '' ? 1 : lowerCountSubs}-${higherCountSubs === '' ? 100000000 : higherCountSubs}`, timezone: timezone === '' ? 0 : timezone, timezone_range: timezoneRange === '' ? 12 : timezoneRange } });
     }
     else {
         title = title.toLowerCase();
-        response = await axios.get(_getTitleInfo, { params: { title: false, keywords: title, page: 1, subscriber_range: `${lowerCountSubs}-${higherCountSubs}`, timezone, timezone_range: timezoneRange } });
+        response = await axios.get(_getTitleInfo, { params: { title: false, keywords: title, page: 1, subscriber_range: `${lowerCountSubs} - ${higherCountSubs}`, timezone: timezone === '' ? 0 : timezone, timezone_range: timezoneRange === '' ? 12 : timezoneRange } });
     }
     return response;
 }
