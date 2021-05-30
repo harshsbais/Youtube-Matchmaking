@@ -15,3 +15,7 @@ body {
 .card img {
     width: 30%;
 }
+
+.modal-body {
+    background-image: radial-gradient(circle farthest-corner at -4% -12.9%, #0f0f0f, #123456);
+}

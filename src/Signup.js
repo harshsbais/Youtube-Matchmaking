@@ -27,7 +27,7 @@ function SignUp({ showSignupModal, setShowSignupModal }) {
             aria-labelledby="contained-modal-title-vcenter"
             centered>
             <Modal.Body>
-                <Form onSubmit={handleSubmit} style={{ color: "black", opacity: "87%" }}>
+                <Form onSubmit={handleSubmit} style={{ color: "white", opacity: "87%" }}>
                     <center><h1 className="mb-5">SignUp to WeCon</h1></center>
                     <label htmlFor='user' style={{ margin: '20px 20px' }}>Username</label>
                     <input autocomplete="off" className="float-right mt-2" name='user' style={{ width: "45%" }} value={user} onChange={setUserInfo} />
@@ -43,7 +43,7 @@ function SignUp({ showSignupModal, setShowSignupModal }) {
                     <br />
                     <span><label>Willing to Collaborate</label></span>
                     <span style={{ margin: "7px 10px" }}><input type="checkbox" onChange={() => setUserData({ ...userData, "collab": !collab })} defaultChecked={collab} /></span>
-                    <button className="ml-3 mt-1 float-right" style={{ background: 'none', color: 'black', border: 'none' }}><i className="fa fa-arrow-right"></i></button>
+                    <button className="ml-3 mt-1 float-right" style={{ background: 'none', color: 'white', border: 'none' }}><i className="fa fa-arrow-right"></i></button>
                 </Form>
             </Modal.Body>
         </Modal>

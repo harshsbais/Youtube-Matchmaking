@@ -27,7 +27,7 @@ function Login({ showLoginModal, setShowLoginModal }) {
             aria-labelledby="contained-modal-title-vcenter"
             centered>
             <Modal.Body>
-                <Form onSubmit={handleSubmit} style={{ color: "black", opacity: "87%" }}>
+                <Form onSubmit={handleSubmit} style={{ color: "white", opacity: "87%" }}>
                     <center><h1 className="mb-5">Login to WeCon</h1></center>
                     <label htmlFor='user' style={{ margin: '20px 20px' }}>Username</label>
                     <input autocomplete="off" className="float-right mt-2" name='user' style={{ width: "45%" }} value={user} onChange={setUserInfo} />
@@ -35,7 +35,7 @@ function Login({ showLoginModal, setShowLoginModal }) {
                     <label htmlFor='user' style={{ margin: '20px 20px' }}>Password</label>
                     <input autocomplete="off" type="password" className="float-right" name='password' style={{ width: "45%" }} value={password} onChange={setUserInfo} />
                     <br />
-                    <button className="ml-3 mt-1 float-right" style={{ background: 'none', color: 'black', border: 'none' }}><i className="fa fa-arrow-right"></i></button>
+                    <button className="ml-3 mt-1 float-right" style={{ background: 'none', color: 'white', border: 'none' }}><i className="fa fa-arrow-right"></i></button>
                 </Form>
             </Modal.Body>
         </Modal>
