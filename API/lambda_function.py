@@ -17,6 +17,19 @@ class youtube:
         api_key="AIzaSyAAlGIQhyobWdE0rF7XUWGbelFw4diVgjk"
         yt = googleapiclient.discovery.build(api_service_name, api_version, developerKey=api_key)
         return yt
+    def query(self, q, results=50):
+        next_page = ""
+        responses = []
+        for i in range(results//50):
+            if next_page == "":
+                request = self.yt.search().list(part="snippet", maxResults=50,q=q, order="date")
+            else:
+                request = self.yt.search().list(part="snippet", maxResults=50,q=q, order="date", pageToken=next_page)
+            response = request.execute()
+            next_page = response["nextPageToken"]
+            responses += response["items"]
+        ids = [response[i]["snippet"]["channelId"] for i in range(len(response))]
+        return ids
     def channel_info(self, ids):
         infos = []
         info = self.yt.channels().list(part=["brandingSettings", "id", "statistics", "topicDetails", "snippet"], fields="items", id=ids)
@@ -29,6 +42,7 @@ class youtube:
     def clean_channel_json(self, json):
         new_json={}
         new_json["id"]=json["id"]
+        new_json["collab"]=False
         new_json["title"]=json["brandingSettings"]["channel"]["title"]
         new_json["description"]=json["brandingSettings"]["channel"].get("description")
         new_json["keywords"]=json["brandingSettings"]["channel"].get("keywords")
@@ -67,24 +81,44 @@ def lambda_handler(event, context):
                 except:
                     pass
             vector=vector/len(keywords)
-            channels=db.channels.find(
+            collab_channels=db.channels.find(
                 {"$and":
                     [{"timezone":
-                        {"$gte":event["timezone"]-event["timezone_range"]}}, 
+                        {"$gte":int(event["timezone"])-int(event["timezone_range"])}}, 
                     {"timezone":
-                        {"$lte":event["timezone"]+event["timezone_range"]}},
+                        {"$lte":int(event["timezone"])+int(event["timezone_range"])}},
                     {"subscriberCount":
                         {"$gte":int(subscriber_range[0])}},
                     {"subscriberCount":
-                        {"$lte":int(subscriber_range[1])}}]
+                        {"$lte":int(subscriber_range[1])}},
+                    {"collab":True}]
+                })
+            channels=db.channels.find(
+                {"$and":
+                    [{"timezone":
+                        {"$gte":int(event["timezone"])-int(event["timezone_range"])}}, 
+                    {"timezone":
+                        {"$lte":int(event["timezone"])+int(event["timezone_range"])}},
+                    {"subscriberCount":
+                        {"$gte":int(subscriber_range[0])}},
+                    {"subscriberCount":
+                        {"$lte":int(subscriber_range[1])}},
+                    {"collab":False}]
                 })
         
             vec_dist_dict={}
-            for channel in channels:
+            for channel in collab_channels:
                 channel_vec=np.array(channel["vector"])
                 dist=np.linalg.norm(vector-channel_vec)
                 vec_dist_dict[channel["title"]]=dist
             response = sorted(vec_dist_dict.items(), key=lambda x: x[1])   #List of sorted key value pairs
+            #Not collab
+            for channel in channels:
+                channel_vec=np.array(channel["vector"])
+                dist=np.linalg.norm(vector-channel_vec)
+                vec_dist_dict[channel["title"]]=dist
+            response += sorted(vec_dist_dict.items(), key=lambda x: x[1])   #List of sorted key value pairs
+
             response = response[(int(event["page"])-1)*20:int(event["page"])*20]
             response = [response[i][0] for i in range(len(response))]
             response = list(db.channels.find({"title":{"$in":response}}, {"_id":0}))
@@ -104,20 +138,35 @@ def lambda_handler(event, context):
                 except:
                     pass
             vector=vector/len(keywords)
+            collab_channels=db.channels.find(
+                {"$and":
+                    [{"subscriberCount":
+                        {"$gte":int(subscriber_range[0])}},
+                    {"subscriberCount":
+                        {"$lte":int(subscriber_range[1])}},
+                    {"collab":True}]
+                })
             channels=db.channels.find(
                 {"$and":
                     [{"subscriberCount":
                         {"$gte":int(subscriber_range[0])}},
                     {"subscriberCount":
-                        {"$lte":int(subscriber_range[1])}}]
+                        {"$lte":int(subscriber_range[1])}},
+                    {"collab":False}]
                 })
-        
             vec_dist_dict={}
-            for channel in channels:
+            for channel in collab_channels:
                 channel_vec=np.array(channel["vector"])
                 dist=np.linalg.norm(vector-channel_vec)
                 vec_dist_dict[channel["title"]]=dist
             response = sorted(vec_dist_dict.items(), key=lambda x: x[1])   #List of sorted key value pairs
+            #Not collab
+            for channel in channels:
+                channel_vec=np.array(channel["vector"])
+                dist=np.linalg.norm(vector-channel_vec)
+                vec_dist_dict[channel["title"]]=dist
+            response += sorted(vec_dist_dict.items(), key=lambda x: x[1])   #List of sorted key value pairs
+
             response = response[(int(event["page"])-1)*20:int(event["page"])*20]
             response = [response[i][0] for i in range(len(response))]
             response = list(db.channels.find({"title":{"$in":response}}, {"_id":0}))
@@ -129,25 +178,45 @@ def lambda_handler(event, context):
     if event.get("title_query"):
         subscriber_range=event["subscriber_range"].split("-")
         if event.get("timezone_range",False):
-            channel_info=list(db.channels.find({"title":event["title"]}))[0]
+            channel_info=list(db.channels.find({"$text": {"$search": event["title"], "$caseSensitive":False, "$diacriticSensitive":False}}))[0]
             vector=np.array(channel_info["vector"])
             vec_dist_dict={}
-            channels=db.channels.find(
+            collab_channels=db.channels.find(
                 {"$and":
                     [{"timezone":
-                        {"$gte":event["timezone"]-event["timezone_range"]}}, 
+                        {"$gte":int(event["timezone"])-int(event["timezone_range"])}}, 
                     {"timezone":
-                        {"$lte":event["timezone"]+event["timezone_range"]}},
+                        {"$lte":int(event["timezone"])+int(event["timezone_range"])}},
                     {"subscriberCount":
                         {"$gte":int(subscriber_range[0])}},
                     {"subscriberCount":
-                        {"$lte":int(subscriber_range[1])}}]
+                        {"$lte":int(subscriber_range[1])}},
+                    {"collab":True}]
                 })
-            for channel in channels:
+            channels=db.channels.find(
+                {"$and":
+                    [{"timezone":
+                        {"$gte":int(event["timezone"])-int(event["timezone_range"])}}, 
+                    {"timezone":
+                        {"$lte":int(event["timezone"])+int(event["timezone_range"])}},
+                    {"subscriberCount":
+                        {"$gte":int(subscriber_range[0])}},
+                    {"subscriberCount":
+                        {"$lte":int(subscriber_range[1])}},
+                    {"collab":False}]
+                })
+            for channel in collab_channels:
                 channel_vec=np.array(channel["vector"])
                 dist=np.linalg.norm(vector-channel_vec)
                 vec_dist_dict[channel["title"]]=dist
             response = sorted(vec_dist_dict.items(), key=lambda x: x[1])   #List of sorted key value pairs
+            #Not collab
+            for channel in channels:
+                channel_vec=np.array(channel["vector"])
+                dist=np.linalg.norm(vector-channel_vec)
+                vec_dist_dict[channel["title"]]=dist
+            response += sorted(vec_dist_dict.items(), key=lambda x: x[1])   #List of sorted key value pairs
+
             response = response[(int(event["page"])-1)*20:int(event["page"])*20]
             response = [response[i][0] for i in range(len(response))]
             response = list(db.channels.find({"title":{"$in":response}}, {"_id":0}))
@@ -157,22 +226,38 @@ def lambda_handler(event, context):
             }
         #If timezones where not used to do the query
         else:
-            channel_info=list(db.channels.find({"title":event["title"]}))[0]
+            channel_info=list(db.channels.find({"$text": {"$search": event["title"], "$caseSensitive":False, "$diacriticSensitive":False}}))[0]
             vector=np.array(channel_info["vector"])
             vec_dist_dict={}
+            collab_channels=db.channels.find(
+                {"$and":
+                    [{"subscriberCount":
+                        {"$gte":int(subscriber_range[0])}},
+                    {"subscriberCount":
+                        {"$lte":int(subscriber_range[1])}},
+                    {"collab":True}]
+                })
             channels=db.channels.find(
                 {"$and":
                     [{"subscriberCount":
                         {"$gte":int(subscriber_range[0])}},
                     {"subscriberCount":
-                        {"$lte":int(subscriber_range[1])}}]
+                        {"$lte":int(subscriber_range[1])}},
+                    {"collab":False}]
                 })
             vec_dist_dict={}
-            for channel in channels:
+            for channel in collab_channels:
                 channel_vec=np.array(channel["vector"])
                 dist=np.linalg.norm(vector-channel_vec)
                 vec_dist_dict[channel["title"]]=dist
             response = sorted(vec_dist_dict.items(), key=lambda x: x[1])   #List of sorted key value pairs
+            #Not collab
+            for channel in channels:
+                channel_vec=np.array(channel["vector"])
+                dist=np.linalg.norm(vector-channel_vec)
+                vec_dist_dict[channel["title"]]=dist
+            response += sorted(vec_dist_dict.items(), key=lambda x: x[1])   #List of sorted key value pairs
+
             response = response[(int(event["page"])-1)*20:int(event["page"])*20]
             response = [response[i][0] for i in range(len(response))]
             response = list(db.channels.find({"title":{"$in":response}}, {"_id":0}))
@@ -184,7 +269,7 @@ def lambda_handler(event, context):
     if event.get("collab_reg", False):
         user_data=db.users.find({"user":event["user"]})
         user_data=list(user_data)[0]
-        query["id"] = user_data["id"]
+        query["id"] = user_data["channel_id"]
         if event["collab"]=="True":
             collab=True
         else:

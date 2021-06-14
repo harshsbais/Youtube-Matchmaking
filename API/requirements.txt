@@ -1,0 +1,7 @@
+flask 
+numpy
+gensim
+pymongo
+googleapi
+json
+shlex
