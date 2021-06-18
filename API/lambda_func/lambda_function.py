@@ -6,17 +6,32 @@ import numpy as np
 import json
 import shlex
 
+yt_key=""
+mongo_srv=""
 
 class youtube:
     def __init__(self, db):
-        self.yt=self.start_api(api_key="AIzaSyAAlGIQhyobWdE0rF7XUWGbelFw4diVgjk")
+        self.yt=self.start_api(api_key=yt_key)
         self.db=db
-    def start_api(self, api_key="AIzaSyAAlGIQhyobWdE0rF7XUWGbelFw4diVgjk"):
+    def start_api(self, api_key=yt_key):
         api_service_name = "youtube"
         api_version = "v3" 
-        api_key="AIzaSyAAlGIQhyobWdE0rF7XUWGbelFw4diVgjk"
+        api_key=yt_key
         yt = googleapiclient.discovery.build(api_service_name, api_version, developerKey=api_key)
         return yt
+    def query(self, q, results=50):
+        next_page = ""
+        responses = []
+        for i in range(results//50):
+            if next_page == "":
+                request = self.yt.search().list(part="snippet", maxResults=50,q=q, order="date")
+            else:
+                request = self.yt.search().list(part="snippet", maxResults=50,q=q, order="date", pageToken=next_page)
+            response = request.execute()
+            next_page = response["nextPageToken"]
+            responses += response["items"]
+        ids = [response[i]["snippet"]["channelId"] for i in range(len(response))]
+        return ids
     def channel_info(self, ids):
         infos = []
         info = self.yt.channels().list(part=["brandingSettings", "id", "statistics", "topicDetails", "snippet"], fields="items", id=ids)
@@ -51,7 +66,7 @@ class youtube:
 
 
 def lambda_handler(event, context):
-    client = mongo.MongoClient("mongodb+srv://Nivek:Youtube123@matchmaking.3hoeh.mongodb.net/matchmaking")
+    client = mongo.MongoClient(mongo_srv)
     db = client.matchmaking
     query={}
     #When we do a query by keywords to search for similar channels

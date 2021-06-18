@@ -2,18 +2,19 @@ import pymongo as mongo
 import googleapiclient.discovery
 import googleapiclient.errors
 import numpy as np
-import gensim
 import json
 import shlex
 
+yt_key=""
+mongo_srv=""
+
 class youtube:
     def __init__(self, db):
-        self.yt=self.start_api(api_key="AIzaSyAAlGIQhyobWdE0rF7XUWGbelFw4diVgjk")
+        self.yt=self.start_api(api_key=yt_key)
         self.db=db
-    def start_api(self, api_key="AIzaSyAAlGIQhyobWdE0rF7XUWGbelFw4diVgjk"):
+    def start_api(self, api_key=yt_key):
         api_service_name = "youtube"
         api_version = "v3" 
-        api_key="AIzaSyAAlGIQhyobWdE0rF7XUWGbelFw4diVgjk"
         yt = googleapiclient.discovery.build(api_service_name, api_version, developerKey=api_key)
         return yt
     def channel_info(self, ids):
